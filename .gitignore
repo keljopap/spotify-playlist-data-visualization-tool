@@ -1,3 +1,4 @@
 .cache
 .env
 init.sh
+src/__pycache__/*

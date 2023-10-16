@@ -74,31 +74,12 @@ def get_sorted_tracks_by_feature(
     selected_feature_key="energy",
     descending=True
 ):
-    #print("About to sort tracks by feature key")
-    #print(json.dumps(tracks_to_features, indent=2))
-    # 4. Sort the saved_tracks_by_features dictionary by the selected feature key
     sorted_tracks = sorted(
         tracks_to_features.values(),
         key=lambda x: x['audio_features'][selected_feature_key],
         reverse=descending
     )
     return sorted_tracks
-
-# This one takes ids only
-# def get_sorted_tracks_by_feature_ids_only(
-#     sp = SP_CLIENT,
-#     track_ids = [],
-#     limit=5,
-#     selected_feature_key="energy",
-#     descending=True
-# ):
-#     tracks_by_features = get_tracks_by_features(sp, track_ids, limit)
-#     sorted_tracks = sorted(
-#         tracks_by_features.values(),
-#         key=lambda x: x[selected_feature_key],
-#         reverse=descending
-#     )
-#     return sorted_tracks
 
 KEY_MAPPINGS = {
     0: "C",
@@ -142,31 +123,6 @@ def print_list_of_tracks_sorted_by_feature(
 
         print(f"{idx}. [{measure}] {track['name']} - {track['artist']}")
 
-# Print the sorted list with song names and their artists
-# def print_list_of_playlist_tracks_sorted_by_feature(
-#     ranked,
-#     playlist_tracks,
-#     selected_feature_key,
-#     desc=True
-# ):
-#     print("\nYour tracks sorted by", selected_feature_key, "(desc)" if desc == True else "(asc)")
-#     print(playlist_tracks)
-#     for idx, track in enumerate(ranked, start=1):
-#         if selected_feature_key not in user_inputs.FEATURE_KEYS:
-#             print(f"Invalid feature key \"{selected_feature_key}\", must be one of \"{user_inputs.FEATURE_KEYS}\"")
-#             break
-
-#         measure = track[selected_feature_key]
-#         if selected_feature_key == "key":
-#             measure = KEY_MAPPINGS[measure]
-#         elif selected_feature_key == "duration_ms":
-#             minutes, seconds = ms_to_min_sec(measure)
-#             measure = f"{minutes}:{seconds}"
-#         print(track)    
-#         print(f"{idx}. [{measure}] for track {track}")
-        #print(f"{idx}. [{measure}] {track['name']} - {track['artist']}")
-            
-
 def get_current_user_playlists(
     sp = SP_CLIENT,
     limit=5
@@ -178,16 +134,17 @@ def get_current_user_playlists(
 
 def get_current_user_playlists_to_track_ids(
     sp = SP_CLIENT,
-    limit=5
+    playlist_limit=5,
+    track_limit=5
 ):
     playlists_to_track_ids = {}
-    user_playlists = get_current_user_playlists(sp, limit)
+    user_playlists = get_current_user_playlists(sp, playlist_limit)
     for playlist in user_playlists:
         pid=playlist['id']
         tracks_from_this_playlist = sp.user_playlist_tracks(
             user=sp.current_user()['id'],
             playlist_id=pid,
-            limit=limit
+            limit=track_limit
         )
         playlists_to_track_ids[pid] = {
             'name': playlist['name'],
@@ -195,8 +152,7 @@ def get_current_user_playlists_to_track_ids(
             'tracks': {}
         }
         track_ids = []
-        for idx, list_track in enumerate(tracks_from_this_playlist['items'], start=1):
-            #print(json.dumps(list_track, indent=1))
+        for list_track in tracks_from_this_playlist['items']:
             tid = list_track['track']['id']
             track_ids.append(tid)
             playlists_to_track_ids[pid]['tracks'][tid] = {}
@@ -207,9 +163,10 @@ def get_current_user_playlists_to_track_ids(
 
 def get_current_user_playlists_to_track_ids_with_audio_features(
     sp = SP_CLIENT,
-    limit=5
+    playlist_limit=5,
+    track_limit=5
 ):
-    playlists_to_track_ids = get_current_user_playlists_to_track_ids(sp, limit)
+    playlists_to_track_ids = get_current_user_playlists_to_track_ids(sp, playlist_limit, track_limit)
     for pid in playlists_to_track_ids:
         pl_track_ids = playlists_to_track_ids[pid]['tracks'].keys()
         tbf = get_tracks_by_features(sp, pl_track_ids)
