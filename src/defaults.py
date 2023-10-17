@@ -74,7 +74,6 @@ def sort_by_descending():
     return order.lower() == "y"
 
 def print_track_info(idx, track):
-    popularity = track['popularity']/100
     artist = track['artists'][0]['name']
     album = track['album']['name']
-    print(f"{idx}. {track['name']} - {artist} - {album}     (Popularity: {popularity})")
+    print(f"{idx}. {track['name']} - {artist} - {album}")

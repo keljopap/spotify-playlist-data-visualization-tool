@@ -1,5 +1,6 @@
 import defaults
 import tracks
+import json
 
 # Returns a list of current user's saved tracks mapped by its id
 # to some useful human-readable info (name, artist, album)
@@ -33,8 +34,7 @@ def get_user_saved_tracks_with_audio_features(
         saved_tracks_by_features[track_id]['audio_features'] = features
     return saved_tracks_by_features
 
-## Prints first x sorted tracks by the selected audio feature from the user's saved tracks list
-def print_saved_tracks_rankings(
+def get_sorted_saved_tracks(
     limit = defaults.TRACK_LIMIT,
     selected_feature_key = defaults.SELECTED_FEATURE_KEY,
     descending_order = defaults.DESCENDING
@@ -43,14 +43,21 @@ def print_saved_tracks_rankings(
         defaults.SP_CLIENT,
         limit
     )
-    sorted_saved_tracks = tracks.get_sorted_tracks_by_feature(
+    return tracks.get_sorted_tracks_by_feature(
         saved,
         selected_feature_key,
         descending_order
     )
+
+## Prints first x sorted tracks by the selected audio feature from the user's saved tracks list
+def print_saved_tracks_rankings(
+    limit = defaults.TRACK_LIMIT,
+    selected_feature_key = defaults.SELECTED_FEATURE_KEY,
+    descending_order = defaults.DESCENDING
+):
     print("\n\nFor your saved tracks")
     tracks.print_list_of_tracks_sorted_by_feature(
-        sorted_saved_tracks,
+        get_sorted_saved_tracks(limit, selected_feature_key, descending_order),
         selected_feature_key,
         descending_order
     )
