@@ -17,6 +17,7 @@ Playlist analysis:
 - [ ] combine any two playlists
 - [ ] identify "outlier" songs
 - [ ] identify most homogeneous and least homogeneous playlists
+- [ ] rank songs by popularity
 
 Playlist analysis visualization:
 
@@ -33,6 +34,7 @@ Artists' songs analysis:
 - [ ] rank a favorite artists' songs by audio features
 - [ ] identify outlier songs
 - [ ] compare homogeneity of two artists' songs across a certain category
+- [ ] popularity ranking
 
 Stretch goals with account data zip  (these can only be done with account data zip - must request download per user instead of using api)
 

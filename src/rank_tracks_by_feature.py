@@ -18,11 +18,11 @@ def get_user_saved_tracks(
     user_saved_tracks = {}
     for item in saved_tracks['items']:
         track = item['track']
-        #print(json.dumps(track, indent=3))
         user_saved_tracks[track['id']] = {
             'name': track['name'],
             'artist': track['artists'][0]['name'],
-            'album': track['album']['name']
+            'album': track['album']['name'],
+            'popularity': track['popularity']/100
         }
     return user_saved_tracks
 
@@ -121,7 +121,7 @@ def print_list_of_tracks_sorted_by_feature(
             minutes, seconds = ms_to_min_sec(measure)
             measure = f"{minutes}:{seconds}"
 
-        print(f"{idx}. [{measure}] {track['name']} - {track['artist']}")
+        print(f"{idx}. [{measure}] {track['name']} - {track['artist']}    (Popularity: {track['popularity']})")
 
 def get_current_user_playlists(
     sp = SP_CLIENT,

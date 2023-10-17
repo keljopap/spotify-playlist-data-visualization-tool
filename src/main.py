@@ -1,6 +1,7 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import json
+import plotly.express as px
 import rank_tracks_by_feature
 import user_inputs
 
@@ -15,8 +16,8 @@ SELECTED_FEATURE_KEY = "tempo"
 # descending = user_inputs.sort_by_descending()
 DESCENDING = True
 
-# PLAYLIST_LIMIT=1
-TRACK_LIMIT=5
+PLAYLIST_LIMIT=1
+TRACK_LIMIT=10
 
 def print_saved_tracks_rankings():
     saved_tracks = rank_tracks_by_feature.get_user_saved_tracks_with_audio_features(sp, TRACK_LIMIT)
@@ -41,8 +42,15 @@ def print_playlists_rankings():
 
 print_saved_tracks_rankings()
 
-print("Most recently listened to songs...")
-recently_played_tracks = sp.current_user_recently_played()
+print("\n\nMost recently listened to songs:")
+recently_played_tracks = sp.current_user_recently_played(5)
 for idx, item in enumerate(recently_played_tracks['items'], start=1):
     track = item['track']
-    print(idx, ".", track['id'], track['name'], "-", track['artists'][0]['name'], "-", track['album']['name'])
+    print(idx, ".", track['popularity']/100, track['name'], "-", track['artists'][0]['name'], "-", track['album']['name'])
+
+print("\n\nGenre recs:\n", json.dumps(sp.recommendation_genre_seeds()))
+
+recs = sp.recommendations([], ['ska', 'anime'], [])
+print("\n\nYour recommendations are:\n")
+for idx, track in enumerate(recs['tracks'], start=1):
+    print(idx, ".", track['popularity']/100, track['name'], "-", track['artists'][0]['name'], "-", track['album']['name'])
