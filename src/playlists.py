@@ -53,7 +53,11 @@ def get_current_user_playlists_to_track_ids_with_audio_features(
     return playlists_to_track_ids
 
 ## Prints first x sorted tracks by the selected audio feature for each of the first y user playlists found
-def print_playlists_rankings():
+def print_playlists_rankings(
+    limit = defaults.TRACK_LIMIT,
+    selected_feature_key = defaults.SELECTED_FEATURE_KEY,
+    descending_order = defaults.DESCENDING
+):
     playlists_with_ratings = get_current_user_playlists_to_track_ids_with_audio_features(
         defaults.SP_CLIENT,
         defaults.PLAYLIST_LIMIT,
@@ -63,12 +67,12 @@ def print_playlists_rankings():
         playlist = playlists_with_ratings[pid]
         new_sorted = tracks.get_sorted_tracks_by_feature(
             playlist['tracks'],
-            defaults.SELECTED_FEATURE_KEY,
-            defaults.DESCENDING
+            selected_feature_key,
+            descending_order
         )
         print("\n\nFor playlist \"" + playlist['name'] + "\"")
         tracks.print_list_of_tracks_sorted_by_feature(
             new_sorted,
-            defaults.SELECTED_FEATURE_KEY,
-            defaults.DESCENDING
+            selected_feature_key,
+            descending_order
         )

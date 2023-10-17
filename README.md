@@ -15,12 +15,13 @@ Playlist analysis:
 - [ ] compare most similar playlists
 - [ ] rank your friends' public playlists based on these too
 - [ ] combine any two playlists
-- [ ] identify "outlier" songs
+- [ ] identify "outlier" songs (plotly may do statistical significance reporting)
 - [ ] identify most homogeneous and least homogeneous playlists
-- [ ] rank songs by popularity
+- [x] rank songs by popularity
 
 Playlist analysis visualization:
 
+- [x] data visualization plugin works using sample data
 - [ ] use a plugin to automatically do some of the data visualizations
 - [ ] create a session for an arbitrary user who authenticates and show them their data
 

@@ -9,13 +9,14 @@ def get_user_saved_tracks(
 ):
     saved_tracks = sp.current_user_saved_tracks(limit=limit)
     user_saved_tracks = {}
-    for item in saved_tracks['items']:
+    for idx, item in enumerate(saved_tracks['items'], start=1):
         track = item['track']
         user_saved_tracks[track['id']] = {
             'name': track['name'],
             'artist': track['artists'][0]['name'],
             'album': track['album']['name'],
-            'popularity': track['popularity']/100
+            defaults.TRAIT_POPULARITY: track[defaults.TRAIT_POPULARITY]/100,
+            defaults.TRAIT_CUSTOM_ORDER: idx
         }
     return user_saved_tracks
 
@@ -33,18 +34,23 @@ def get_user_saved_tracks_with_audio_features(
     return saved_tracks_by_features
 
 ## Prints first x sorted tracks by the selected audio feature from the user's saved tracks list
-def print_saved_tracks_rankings():
+def print_saved_tracks_rankings(
+    limit = defaults.TRACK_LIMIT,
+    selected_feature_key = defaults.SELECTED_FEATURE_KEY,
+    descending_order = defaults.DESCENDING
+):
     saved = get_user_saved_tracks_with_audio_features(
         defaults.SP_CLIENT,
-        defaults.TRACK_LIMIT
+        limit
     )
     sorted_saved_tracks = tracks.get_sorted_tracks_by_feature(
         saved,
-        defaults.SELECTED_FEATURE_KEY,
-        defaults.DESCENDING
+        selected_feature_key,
+        descending_order
     )
     print("\n\nFor your saved tracks")
     tracks.print_list_of_tracks_sorted_by_feature(
         sorted_saved_tracks,
-        defaults.SELECTED_FEATURE_KEY
+        selected_feature_key,
+        descending_order
     )
