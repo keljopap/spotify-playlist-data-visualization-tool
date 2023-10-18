@@ -5,6 +5,7 @@
 1. Follow the steps [here](https://developer.spotify.com/documentation/web-api/tutorials/getting-started) to create an access token.
 2. Run `cp .env.dist .env`
 3. Set the CLIENT_ID and CLIENT_SECRET values in the .env file
+4. Run `pip install -r requirements.txt`
 
 ## Feature Ideas
 
@@ -22,7 +23,7 @@ Playlist analysis:
 Playlist analysis visualization:
 
 - [x] data visualization plugin works using sample data
-- [ ] use a plugin to automatically do some of the data visualizations
+- [x] use a plugin to automatically do some of the data visualizations
 - [ ] create a session for an arbitrary user who authenticates and show them their data
 
 Playlist management:

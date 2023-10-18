@@ -1,10 +1,8 @@
-import plotly.graph_objects as go
-
-tracks = [
+TRACKS_DATA = [
    {
       "name": "Hunnybee",
       "artist": "Unknown Mortal Orchestra",
-      "album": "Sex & Food",
+      "album": "*** & Food",
       "popularity": 0.0,
       "custom_order_idx": 46,
       "audio_features": {
@@ -1052,70 +1050,3 @@ tracks = [
       }
    }
 ]
-
-POPULARITY = "popularity"
-CUSTOM_ORDER_INDEX = "custom_order_idx"
-song_names = [track["name"][:25] + " - " + track["artist"] for track in tracks]
-custom_order_indices = [track[CUSTOM_ORDER_INDEX] for track in tracks]
-popularity = [track[POPULARITY] for track in tracks]
-audio_features = list(tracks[0]["audio_features"].keys())
-
-fig = go.Figure(
-    go.Bar(
-        x=song_names,
-        y=popularity,
-        name="Popularity"
-    )
-)
-
-feature_dropdown = [
-    {
-        "label": "Popularity",
-        "method": "update",
-        "args": [
-            {"y": [popularity], "name": ["Popularity"]},
-            {"title": "Popularity"}
-        ]
-    }
-]
-
-feature_dropdown.append(
-   {
-      "label": CUSTOM_ORDER_INDEX,
-      "method": "update",
-      "args": [
-            {"y": [custom_order_indices], "name": [CUSTOM_ORDER_INDEX]},
-            {"title": "Default Playlist Index"}
-      ]
-   }
-)
-
-for feature in audio_features:
-    feature_values = [track["audio_features"][feature] for track in tracks]
-    feature_dropdown.append(
-        {
-            "label": feature,
-            "method": "update",
-            "args": [
-                {"y": [feature_values], "name": [feature]},
-                {"title": feature}
-            ]
-        }
-    )
-
-fig.update_layout(
-    updatemenus=[
-        {
-            "buttons": feature_dropdown,
-            "direction": "down",
-            "pad": {"r": 10, "t": 10},
-            "showactive": True,
-            "x": 0.1,
-            "xanchor": "left",
-            "y": 1.15,
-            "yanchor": "top"
-        }
-    ]
-)
-
-fig.show()

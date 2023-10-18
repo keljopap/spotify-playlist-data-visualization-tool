@@ -3,3 +3,4 @@
 .vscode/*
 init.sh
 src/__pycache__/*
+plotly/__pycache__/*

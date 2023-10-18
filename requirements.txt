@@ -1,3 +1,5 @@
+dash==2.14.0
 pandas==2.1.1
 plotly==5.17.0
+python-dotenv==1.0.0
 spotipy==2.23.0
