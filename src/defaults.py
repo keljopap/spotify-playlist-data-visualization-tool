@@ -7,7 +7,6 @@ load_dotenv()
 
 # Define the custom behavior on rate limit
 def rate_limited(response, *args, **kwargs):
-    print("in the rate limit method with response status code", response.status_code)
     if response.status_code == 429:
         wait_time = int(response.headers.get('Retry-After', 1))
         print(f"Rate limited! Sleeping for {wait_time} seconds.")
@@ -29,7 +28,6 @@ SP_CLIENT = spotipy.Spotify(
 
 # Attach the custom behavior to the Spotipy session
 SP_CLIENT._session.hooks['response'].append(rate_limited)
-print(SP_CLIENT._session.hooks['response'])
 
 TRAIT_POPULARITY = "popularity"
 TRAIT_CUSTOM_ORDER = "custom_order_idx"

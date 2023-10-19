@@ -38,7 +38,7 @@ def get_tracks_by_features(
         else:
             # If it's another kind of error, raise it
             raise e
-    print(audio_features_by_track)
+
     ids_to_features = {}
     for tfs in audio_features_by_track:
         ids_to_features[tfs['id']] = {}

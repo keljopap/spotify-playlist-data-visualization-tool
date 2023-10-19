@@ -7,8 +7,8 @@ import defaults
 import playlists
 import time
 
-PLAYLIST_LIMIT = 5
-TRACK_LIMIT = 5
+PLAYLIST_LIMIT = 50
+TRACK_LIMIT = 50
 print(f"Loading first {TRACK_LIMIT} tracks of first {PLAYLIST_LIMIT} user playlists")
 start_time = time.time()  # get the current time before running the function
 USER_PLAYLISTS = playlists.get_current_user_playlists_to_track_ids(
