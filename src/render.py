@@ -6,7 +6,6 @@ from dash.dependencies import Input, Output
 import saved_tracks
 import defaults
 
-# TODO make a dropdown to select the playlist you'd like to display the rankings for, then load the data (display loading icon in Graph with "loading_state")
 TRACKS_DATA = saved_tracks.get_sorted_saved_tracks(50, defaults.TRAIT_POPULARITY, defaults.DESCENDING)
 
 app = dash.Dash(__name__)
