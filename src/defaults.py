@@ -12,6 +12,7 @@ def rate_limited(response, *args, **kwargs):
         print(f"Rate limited! Sleeping for {wait_time} seconds.")
         time.sleep(wait_time)
 
+# TODO toggle whether you want to see public+private or only public playlists
 SCOPES = "user-library-read user-read-recently-played" # playlist-read-private"
 CLIENT_ID = os.getenv('CLIENT_ID')
 CLIENT_SECRET = os.getenv('CLIENT_SECRET')
