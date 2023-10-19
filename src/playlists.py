@@ -85,13 +85,12 @@ def populate_audio_features_by_playlist(
     playlists_with_tracks = {},
     sp = defaults.SP_CLIENT
 ):
-    #print(json.dumps(playlists_with_tracks[playlist_id]['tracks'], indent=2))
+    print(f"Loading tracks' audio features for playlist {playlists_with_tracks[playlist_id]['name']}")
     track_ids = playlists_with_tracks[playlist_id]['tracks'].keys()
     tracks_with_audio_features = get_tracks_with_audio_features(track_ids, sp)
     for tid in track_ids:
         if tid in tracks_with_audio_features and 'audio_features' in tracks_with_audio_features[tid]:
             playlists_with_tracks[playlist_id]['tracks'][tid]['audio_features'] = tracks_with_audio_features[tid]['audio_features']
-    #print("\n\n\n", playlist_id, "\n\nplaylists with tracks with audio features:", json.dumps(playlists_with_tracks))
     return playlists_with_tracks
 
 def get_current_user_playlists_to_track_ids_with_audio_features(
@@ -101,7 +100,6 @@ def get_current_user_playlists_to_track_ids_with_audio_features(
 ):
     playlists_with_tracks = get_current_user_playlists_to_track_ids(sp, playlist_limit, track_limit)
     for pid in playlists_with_tracks:
-        print(f"Loading tracks' audio features for playlist {playlists_with_tracks[pid]['name']}")
         playlists_with_tracks = populate_audio_features_by_playlist(pid, playlists_with_tracks)
         playlists_with_tracks[pid]['features_loaded'] = True
     print("Done loading track data - check http://127.0.0.1:8050/")
