@@ -10,7 +10,7 @@ import json
 
 # TODO make a dropdown to select the playlist you'd like to display the rankings for, then load the data (display loading icon in Graph with "loading_state")
 #USER_PLAYLISTS = playlists.get_current_user_playlists_no_tracks(defaults.SP_CLIENT, 50)
-USER_PLAYLISTS = playlists.get_current_user_playlists_to_track_ids_with_audio_features(defaults.SP_CLIENT,5,50)
+USER_PLAYLISTS = playlists.get_current_user_playlists_to_track_ids_with_audio_features(defaults.SP_CLIENT,50,50)
 PLAYLIST_OPTIONS = [{'label': details['name'], 'value': playlist_id} for playlist_id, details in USER_PLAYLISTS.items()]
 
 app = dash.Dash(__name__)
@@ -63,13 +63,13 @@ app.layout = html.Div([
     ]
 )
 def update_figure(playlist_id, selected_feature, sort_order):
-    print("\nplaylist id:", playlist_id)
-    print("selected feature:", selected_feature)
-    print("sort order:", sort_order)
+    #print("\nplaylist id:", playlist_id)
+    #print("selected feature:", selected_feature)
+    #print("sort order:", sort_order)
 
-    print("USER_PLAYLISTS:", json.dumps(USER_PLAYLISTS))
+    #print("USER_PLAYLISTS:", json.dumps(USER_PLAYLISTS))
     tracks_data = USER_PLAYLISTS[playlist_id]['tracks'].values()
-    print("tracks data for playlist:", tracks_data)
+    #print("tracks data for playlist:", tracks_data)
 
     if sort_order == 'none':
         tracks_sorted = sorted(tracks_data, key=lambda x: x[defaults.TRAIT_CUSTOM_ORDER])
@@ -84,12 +84,22 @@ def update_figure(playlist_id, selected_feature, sort_order):
         values = [track['audio_features'][selected_feature] for track in tracks_sorted]
 
     hover_info_names = ["Name: " + track['name'] + "<br>Artist: " + track['artist'] + "<br>Album: " + track['album'] for track in tracks_sorted]
-    shortened_names = [track['name'][:25] for track in tracks_sorted]
+    shortened_names = [str(i) + ". " + track['name'][:25] for i, track in enumerate(tracks_sorted, start=1)]
 
     fig = go.Figure()
 
     fig.add_trace(
         go.Bar(
+            x=shortened_names,
+            y=values,
+            hovertext=hover_info_names,
+            hoverinfo='text+y',
+            name=selected_feature,
+        )
+    )
+
+    fig.add_trace(
+        go.Scatter(
             x=shortened_names,
             y=values,
             hovertext=hover_info_names,

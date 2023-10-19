@@ -67,8 +67,8 @@ def get_tracks_with_audio_features(
     tracks_with_audio_features = {}
     tbf = tracks.get_tracks_by_features(sp, track_ids)
     for track_id, features in tbf.items():
-        print({track_id})
-        print("FEATURES:", features)
+        #print({track_id})
+        #print("FEATURES:", features)
         tracks_with_audio_features[track_id] = {}
         tracks_with_audio_features[track_id]['audio_features'] = features
     return tracks_with_audio_features
@@ -81,7 +81,7 @@ def populate_audio_features_by_playlist(
     playlists_with_tracks = {},
     sp = defaults.SP_CLIENT
 ):
-    print(json.dumps(playlists_with_tracks[playlist_id]['tracks'], indent=2))
+    #print(json.dumps(playlists_with_tracks[playlist_id]['tracks'], indent=2))
     track_ids = playlists_with_tracks[playlist_id]['tracks'].keys()
     tracks_with_audio_features = get_tracks_with_audio_features(track_ids, sp)
     for tid in track_ids:
