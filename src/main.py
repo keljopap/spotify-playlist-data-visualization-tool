@@ -5,15 +5,22 @@ from dash import dcc, html
 from dash.dependencies import Input, Output
 import defaults
 import playlists
+import time
 
 PLAYLIST_LIMIT = 50
 TRACK_LIMIT = 50
 print(f"Loading first {TRACK_LIMIT} tracks of first {PLAYLIST_LIMIT} user playlists")
-USER_PLAYLISTS = playlists.get_current_user_playlists_to_track_ids_with_audio_features(
+start_time = time.time()  # get the current time before running the function
+USER_PLAYLISTS = playlists.get_current_user_playlists_to_track_ids(
     defaults.SP_CLIENT,
     PLAYLIST_LIMIT,
     TRACK_LIMIT
 )
+
+end_time = time.time()  # get the current time after running the function
+elapsed_time = end_time - start_time  # compute the difference
+print(f"Loading user playlist data took {elapsed_time:.4f} seconds to run.")
+
 PLAYLIST_OPTIONS = [{'label': details['name'], 'value': playlist_id} for playlist_id, details in USER_PLAYLISTS.items()]
 
 app = dash.Dash(__name__)
@@ -54,19 +61,38 @@ app.layout = html.Div([
         clearable=False
     ),
     dcc.Graph(id='bar-plot', figure=fig),
+    dcc.Checklist(
+        id='toggle-charts',
+        options=[
+            {'label': 'Show Bar Chart', 'value': 'bar'},
+            {'label': 'Show Trend Line', 'value': 'trend'}
+        ],
+        value=['bar', 'trend'],  # default to showing both
+        inline=True
+    ),
+    dcc.Store(id='store-toggle-state', storage_type='session'),
 ])
-
 
 @app.callback(
     Output('bar-plot', 'figure'),
     [
         Input('playlist-dropdown', 'value'),
         Input('feature-dropdown', 'value'),
-        Input('sort-order-dropdown', 'value')
+        Input('sort-order-dropdown', 'value'),
+        Input('toggle-charts', 'value')
     ]
 )
-def update_figure(playlist_id, selected_feature, sort_order):
+def update_figure(playlist_id, selected_feature, sort_order, toggled_charts):
+    global USER_PLAYLISTS
     tracks_data = USER_PLAYLISTS[playlist_id]['tracks'].values()
+    if USER_PLAYLISTS[playlist_id]['features_loaded']:
+        tracks_data = USER_PLAYLISTS[playlist_id]['tracks'].values()
+    else:
+        USER_PLAYLISTS = playlists.populate_audio_features_by_playlist(
+            playlist_id,
+            USER_PLAYLISTS
+        )
+        USER_PLAYLISTS[playlist_id]['features_loaded'] = True
 
     if sort_order == 'default':
         tracks_sorted = sorted(tracks_data, key=lambda x: x[defaults.TRAIT_CUSTOM_ORDER])
@@ -85,25 +111,26 @@ def update_figure(playlist_id, selected_feature, sort_order):
 
     fig = go.Figure()
 
-    fig.add_trace(
-        go.Bar(
-            x=shortened_names,
-            y=values,
-            hovertext=hover_info_names,
-            hoverinfo='text+y',
-            name=selected_feature,
+    if 'bar' in toggled_charts:
+        fig.add_trace(
+            go.Bar(
+                x=shortened_names,
+                y=values,
+                hovertext=hover_info_names,
+                hoverinfo='text+y',
+                name=selected_feature,
+            )
         )
-    )
-
-    fig.add_trace(
-        go.Scatter(
-            x=shortened_names,
-            y=values,
-            hovertext=hover_info_names,
-            hoverinfo='text+y',
-            name=selected_feature,
+    if 'trend' in toggled_charts:
+        fig.add_trace(
+            go.Scatter(
+                x=shortened_names,
+                y=values,
+                hovertext=hover_info_names,
+                hoverinfo='text+y',
+                name=selected_feature,
+            )
         )
-    )
 
     fig.update_layout(title_text=f"Songs by {selected_feature}")
     fig.update_xaxes(tickangle=30)

@@ -1,5 +1,8 @@
 import defaults
+import spotipy
+import time
 
+WAIT_TIME = 1
 # Get track metadata
 def get_tracks_from_ids(
     sp = defaults.SP_CLIENT,
@@ -23,7 +26,19 @@ def get_tracks_by_features(
     track_ids = [],
     limit=5
 ):
-    audio_features_by_track = sp.audio_features(track_ids)
+    global WAIT_TIME
+    audio_features_by_track = {}
+    try:
+        audio_features_by_track = sp.audio_features(track_ids)
+    except spotipy.exceptions.SpotifyException as e:
+        if e.http_status == 429:
+            print(f"Rate limited! Waiting for {WAIT_TIME} seconds.")
+            time.sleep(WAIT_TIME)
+            WAIT_TIME *= 2  # Double the wait time for the next attempt
+        else:
+            # If it's another kind of error, raise it
+            raise e
+
     ids_to_features = {}
     for tfs in audio_features_by_track:
         ids_to_features[tfs['id']] = {}

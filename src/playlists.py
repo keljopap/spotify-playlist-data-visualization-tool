@@ -24,7 +24,9 @@ def get_current_user_playlists_no_tracks(
         playlists_info_no_tracks[pid] = {
             'name': playlist['name'],
             'description': playlist['description'],
-            'tracks': {}
+            'tracks': {},
+            'tracks_loaded': False,
+            'features_loaded': False
         }
     return playlists_info_no_tracks
 
@@ -54,10 +56,13 @@ def get_current_user_playlists_to_track_ids(
         playlists_to_track_ids[pid] = {
             'name': playlist['name'],
             'description': playlist['description'],
-            'tracks': {}
+            'tracks': {},
+            'tracks_loaded': False,
+            'features_loaded': False
         }
         print(f"Loading tracks' metadata for playlist {playlist['name']}")
         playlists_to_track_ids[pid]['tracks'] = get_tracks_from_playlist(pid, sp, track_limit)
+        playlists_to_track_ids[pid]['tracks_loaded'] = True
 
     return playlists_to_track_ids
 
@@ -84,7 +89,8 @@ def populate_audio_features_by_playlist(
     track_ids = playlists_with_tracks[playlist_id]['tracks'].keys()
     tracks_with_audio_features = get_tracks_with_audio_features(track_ids, sp)
     for tid in track_ids:
-        playlists_with_tracks[playlist_id]['tracks'][tid]['audio_features'] = tracks_with_audio_features[tid]['audio_features']
+        if tid in tracks_with_audio_features and 'audio_features' in tracks_with_audio_features[tid]:
+            playlists_with_tracks[playlist_id]['tracks'][tid]['audio_features'] = tracks_with_audio_features[tid]['audio_features']
     #print("\n\n\n", playlist_id, "\n\nplaylists with tracks with audio features:", json.dumps(playlists_with_tracks))
     return playlists_with_tracks
 
@@ -97,6 +103,7 @@ def get_current_user_playlists_to_track_ids_with_audio_features(
     for pid in playlists_with_tracks:
         print(f"Loading tracks' audio features for playlist {playlists_with_tracks[pid]['name']}")
         playlists_with_tracks = populate_audio_features_by_playlist(pid, playlists_with_tracks)
+        playlists_with_tracks[pid]['features_loaded'] = True
     print("Done loading track data - check http://127.0.0.1:8050/")
     return playlists_with_tracks
 

@@ -1,10 +1,18 @@
 from dotenv import load_dotenv
 import os
 import spotipy
+import time
 
 load_dotenv()
 
-SCOPES = "user-library-read user-read-recently-played playlist-read-private"
+# Define the custom behavior on rate limit
+def rate_limited(response, *args, **kwargs):
+    if response.status_code == 429:
+        wait_time = int(response.headers.get('Retry-After', 1))
+        print(f"Rate limited! Sleeping for {wait_time} seconds.")
+        time.sleep(wait_time)
+
+SCOPES = "user-library-read user-read-recently-played" # playlist-read-private"
 CLIENT_ID = os.getenv('CLIENT_ID')
 CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 REDIRECT_URI = os.getenv('REDIRECT_URI')
@@ -17,6 +25,9 @@ SP_CLIENT = spotipy.Spotify(
         redirect_uri=REDIRECT_URI
     )
 )
+
+# Attach the custom behavior to the Spotipy session
+SP_CLIENT._session.hooks['response'].append(rate_limited)
 
 TRAIT_POPULARITY = "popularity"
 TRAIT_CUSTOM_ORDER = "custom_order_idx"
