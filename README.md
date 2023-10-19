@@ -19,11 +19,14 @@ Playlist analysis:
 - [ ] identify "outlier" songs (plotly may do statistical significance reporting)
 - [ ] identify most homogeneous and least homogeneous playlists
 - [x] rank songs by popularity
+- [ ] create new copies of the playlists based on custom ordering (or override in place)
 
 Playlist analysis visualization:
 
 - [x] data visualization plugin works using sample data
 - [x] use a plugin to automatically do some of the data visualizations
+- [x] visualize popularity and audio features for all the current user's playlists
+- [x] sort by ascending, descending, or original order in the playlist to analyze where there transitions between songs could sound more seamless
 - [ ] create a session for an arbitrary user who authenticates and show them their data
 
 Playlist management:
