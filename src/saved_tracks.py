@@ -51,9 +51,9 @@ def get_sorted_saved_tracks(
 
 ## Prints first x sorted tracks by the selected audio feature from the user's saved tracks list
 def print_saved_tracks_rankings(
-    limit = defaults.TRACK_LIMIT,
     selected_feature_key = defaults.SELECTED_FEATURE_KEY,
-    descending_order = defaults.DESCENDING
+    descending_order = defaults.DESCENDING,
+    limit = defaults.TRACK_LIMIT
 ):
     print("\n\nFor your saved tracks")
     tracks.print_list_of_tracks_sorted_by_feature(
