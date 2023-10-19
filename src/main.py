@@ -46,11 +46,11 @@ app.layout = html.Div([
     dcc.Dropdown(
         id='sort-order-dropdown',
         options=[
+            {'label': 'Default Playlist Order', 'value': 'default'},
             {'label': 'Ascending', 'value': 'asc'},
-            {'label': 'Descending', 'value': 'desc'},
-            {'label': 'None (Custom Order)', 'value': 'none'},
+            {'label': 'Descending', 'value': 'desc'}
         ],
-        value='desc',
+        value='default',
         clearable=False
     ),
     dcc.Graph(id='bar-plot', figure=fig),
@@ -66,15 +66,9 @@ app.layout = html.Div([
     ]
 )
 def update_figure(playlist_id, selected_feature, sort_order):
-    #print("\nplaylist id:", playlist_id)
-    #print("selected feature:", selected_feature)
-    #print("sort order:", sort_order)
-
-    #print("USER_PLAYLISTS:", json.dumps(USER_PLAYLISTS))
     tracks_data = USER_PLAYLISTS[playlist_id]['tracks'].values()
-    #print("tracks data for playlist:", tracks_data)
 
-    if sort_order == 'none':
+    if sort_order == 'default':
         tracks_sorted = sorted(tracks_data, key=lambda x: x[defaults.TRAIT_CUSTOM_ORDER])
     elif selected_feature == defaults.TRAIT_POPULARITY:
         tracks_sorted = sorted(tracks_data, key=lambda x: x[selected_feature], reverse=(sort_order == 'desc'))

@@ -1,7 +1,22 @@
+from dotenv import load_dotenv
+import os
 import spotipy
 
-SCOPES = "user-library-read user-read-recently-played"
-SP_CLIENT = spotipy.Spotify(auth_manager=spotipy.SpotifyOAuth(scope=SCOPES))
+load_dotenv()
+
+SCOPES = "user-library-read user-read-recently-played playlist-read-private"
+CLIENT_ID = os.getenv('CLIENT_ID')
+CLIENT_SECRET = os.getenv('CLIENT_SECRET')
+REDIRECT_URI = os.getenv('REDIRECT_URI')
+
+SP_CLIENT = spotipy.Spotify(
+    auth_manager=spotipy.SpotifyOAuth(
+        scope=SCOPES,
+        client_id=CLIENT_ID,
+        client_secret=CLIENT_SECRET,
+        redirect_uri=REDIRECT_URI
+    )
+)
 
 TRAIT_POPULARITY = "popularity"
 TRAIT_CUSTOM_ORDER = "custom_order_idx"
