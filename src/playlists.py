@@ -56,6 +56,7 @@ def get_current_user_playlists_to_track_ids(
             'description': playlist['description'],
             'tracks': {}
         }
+        print(f"Loading tracks' metadata for playlist {playlist['name']}")
         playlists_to_track_ids[pid]['tracks'] = get_tracks_from_playlist(pid, sp, track_limit)
 
     return playlists_to_track_ids
@@ -67,8 +68,6 @@ def get_tracks_with_audio_features(
     tracks_with_audio_features = {}
     tbf = tracks.get_tracks_by_features(sp, track_ids)
     for track_id, features in tbf.items():
-        #print({track_id})
-        #print("FEATURES:", features)
         tracks_with_audio_features[track_id] = {}
         tracks_with_audio_features[track_id]['audio_features'] = features
     return tracks_with_audio_features
@@ -96,7 +95,9 @@ def get_current_user_playlists_to_track_ids_with_audio_features(
 ):
     playlists_with_tracks = get_current_user_playlists_to_track_ids(sp, playlist_limit, track_limit)
     for pid in playlists_with_tracks:
+        print(f"Loading tracks' audio features for playlist {playlists_with_tracks[pid]['name']}")
         playlists_with_tracks = populate_audio_features_by_playlist(pid, playlists_with_tracks)
+    print("Done loading track data - check http://127.0.0.1:8050/")
     return playlists_with_tracks
 
 ## Gets first x sorted tracks by the selected audio feature for each of the first y user playlists found
