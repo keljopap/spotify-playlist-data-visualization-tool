@@ -1,4 +1,4 @@
-# Background
+## Background
 
 I wanted a tool to visualize my playlists based on all the quantitative metrics the Spotify API provides for each track.  Sometimes I start throwing a bunch of songs I like in a playlist without having a good sense of the theme yet, then end up with a group of songs I like individually but they just don't quite flow well together.  This will use data to validate those feelings and tune your ears to the differences between your favorite songs.
 
